@@ -170,6 +170,77 @@
         "padding-block-end": 68
       }
     },
+    "tabbed_media_demo_X7k2Lp": {
+      "type": "tabbed-media",
+      "blocks": {
+        "tab_first": {
+          "type": "tab",
+          "settings": {
+            "label": "Irradiance Map",
+            "image": "shopify://shop_images/image-resources2.jpg",
+            "description": "<p>Shows how much sunlight a location gets, vital for predicting solar energy production.</p>",
+            "annotation_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          }
+        },
+        "tab_second": {
+          "type": "tab",
+          "settings": {
+            "label": "Shading Study",
+            "image": "shopify://shop_images/image-resources2.jpg",
+            "description": "<p>Highlights roof obstructions and shaded areas to estimate real panel performance.</p>",
+            "annotation_text": "Shaded zones and roof obstacles are highlighted in this report."
+          }
+        },
+        "tab_third": {
+          "type": "tab",
+          "settings": {
+            "label": "System Design",
+            "image": "shopify://shop_images/image-resources2.jpg",
+            "description": "<p>Shows the proposed panel placement and equipment layout for the home.</p>",
+            "annotation_text": "Panel placement and system layout details appear here."
+          }
+        },
+        "tab_fourth": {
+          "type": "tab",
+          "settings": {
+            "label": "Energy Savings Summary",
+            "image": "shopify://shop_images/image-resources2.jpg",
+            "description": "<p>Summarizes estimated production, offset, and projected long-term savings.</p>",
+            "annotation_text": "Projected savings and annual offset can be explained here."
+          }
+        },
+        "tab_fifth": {
+          "type": "tab",
+          "settings": {
+            "label": "Materials List and Quote",
+            "image": "shopify://shop_images/image-resources2.jpg",
+            "description": "<p>Lists the proposed equipment and pricing included in the PowerPlan package.</p>",
+            "annotation_text": "Equipment list and quote details can be shown in this callout."
+          }
+        }
+      },
+      "block_order": [
+        "tab_first",
+        "tab_second",
+        "tab_third",
+        "tab_fourth",
+        "tab_fifth"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "PowerPlan Report: What You'll Receive",
+        "tabs_aria_label": "Homepage tabbed media navigation",
+        "color_scheme": "scheme-1",
+        "section_width": "page-width",
+        "corner_radius": 16,
+        "image_aspect_ratio_desktop": "1232 / 512",
+        "image_aspect_ratio_mobile": "358 / 239",
+        "tabs_gap": 12,
+        "content_gap": 28,
+        "padding-block-start": 88,
+        "padding-block-end": 80
+      }
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -369,6 +440,7 @@
     "new_section",
     "hero_jVaWmY",
     "cards_showcase_Tq7mNx",
+    "tabbed_media_demo_X7k2Lp",
     "product_list_fa6P9H"
   ]
 }

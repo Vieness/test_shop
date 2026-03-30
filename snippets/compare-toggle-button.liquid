@@ -97,10 +97,7 @@
           {{- spec_delimiter -}}
           {
             "featureKey": "brand",
-            "label": "Бренд",
             "value": {{ product.metafields.custom.brand.value | json }},
-            "groupKey": "primary",
-            "groupLabel": "Основні характеристики",
             "sortOrder": 1
           }
           {% assign spec_delimiter = ',' %}
@@ -110,10 +107,7 @@
           {{- spec_delimiter -}}
           {
             "featureKey": "country_of_origin",
-            "label": "Країна виробника",
             "value": {{ product.metafields.custom.country_of_origin.value | json }},
-            "groupKey": "primary",
-            "groupLabel": "Основні характеристики",
             "sortOrder": 2
           }
           {% assign spec_delimiter = ',' %}
@@ -123,10 +117,7 @@
           {{- spec_delimiter -}}
           {
             "featureKey": "release_year",
-            "label": "Рік випуску",
             "value": {{ product.metafields.custom.release_year.value | json }},
-            "groupKey": "primary",
-            "groupLabel": "Основні характеристики",
             "sortOrder": 3
           }
           {% assign spec_delimiter = ',' %}
@@ -136,10 +127,7 @@
           {{- spec_delimiter -}}
           {
             "featureKey": "color",
-            "label": "Колір",
             "value": {{ product.metafields.custom.color.value | json }},
-            "groupKey": "secondary",
-            "groupLabel": "Додаткові характеристики",
             "sortOrder": 10
           }
           {% assign spec_delimiter = ',' %}
@@ -149,10 +137,7 @@
           {{- spec_delimiter -}}
           {
             "featureKey": "has_print",
-            "label": "Наявність принту",
             "value": {{ product.metafields.custom.has_print.value | json }},
-            "groupKey": "secondary",
-            "groupLabel": "Додаткові характеристики",
             "sortOrder": 11
           }
           {% assign spec_delimiter = ',' %}
@@ -162,10 +147,7 @@
           {{- spec_delimiter -}}
           {
             "featureKey": "cut_color",
-            "label": "Колір крою",
             "value": {{ product.metafields.custom.cut_color.value | json }},
-            "groupKey": "secondary",
-            "groupLabel": "Додаткові характеристики",
             "sortOrder": 12
           }
         {% endif %}

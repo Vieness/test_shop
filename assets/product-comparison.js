@@ -212,9 +212,23 @@ class ProductCompareToggle extends Component {
 class ProductComparisonPage extends Component {
   requiredRefs = ['count', 'emptyState', 'content', 'cards', 'groups'];
   #abortController = new AbortController();
+  #specDefinitions = {
+    primaryHeading: 'Primary specifications',
+    secondaryHeading: 'Secondary specifications',
+    definitions: {},
+  };
 
   connectedCallback() {
     super.connectedCallback();
+
+    const source = this.querySelector('[data-compare-spec-definitions]');
+    if (source instanceof HTMLScriptElement) {
+      try {
+        this.#specDefinitions = JSON.parse(source.textContent || '') || this.#specDefinitions;
+      } catch (_error) {
+        /* noop */
+      }
+    }
 
     const { signal } = this.#abortController;
     window.addEventListener(STORAGE_EVENT, this.renderComparison, { signal });
@@ -379,14 +393,18 @@ class ProductComparisonPage extends Component {
       for (const spec of itemSpecs) {
         const key = normalizeText(spec.featureKey) || normalizeText(spec.label).toLowerCase();
         if (!key) continue;
+        const definition = this.#specDefinitions.definitions?.[key] || {};
 
         if (!specsMap.has(key)) {
           specsMap.set(key, {
             key,
-            label: spec.label || key,
-            groupKey: spec.groupKey || 'primary',
-            groupLabel: spec.groupLabel || '',
-            sortOrder: Number(spec.sortOrder) || 0,
+            label: definition.label || spec.label || key,
+            groupKey: definition.groupKey || spec.groupKey || 'primary',
+            groupLabel:
+              (definition.groupKey || spec.groupKey || 'primary') === 'secondary'
+                ? this.#specDefinitions.secondaryHeading || spec.groupLabel || ''
+                : this.#specDefinitions.primaryHeading || spec.groupLabel || '',
+            sortOrder: Number(definition.sortOrder ?? spec.sortOrder) || 0,
             values: new Map(),
           });
         }

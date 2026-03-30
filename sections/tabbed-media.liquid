@@ -1,0 +1,575 @@
+<script
+  src="{{ 'tabbed-media.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+<div class="section-background tabbed-media-section__background"></div>
+<div
+  class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} spacing-style tabbed-media-section"
+  style="
+    {% render 'spacing-style', settings: section.settings %}
+    --tabbed-media-radius: {{ section.settings.corner_radius }}px;
+    --tabbed-media-image-ratio-desktop: {{ section.settings.image_aspect_ratio_desktop }};
+    --tabbed-media-image-ratio-mobile: {{ section.settings.image_aspect_ratio_mobile }};
+    --tabbed-media-tabs-gap: {{ section.settings.tabs_gap }}px;
+    --tabbed-media-content-gap: {{ section.settings.content_gap }}px;
+  "
+>
+  <tabbed-media-component class="tabbed-media">
+    <div class="tabbed-media__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="tabbed-media__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="tabbed-media__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div
+        class="tabbed-media__tablist"
+        role="tablist"
+        aria-label="{{ section.settings.tabs_aria_label | escape }}"
+      >
+        {% for block in section.blocks %}
+          {% render 'tabbed-media-tab-button', block: block, section_id: section.id, index: forloop.index0 %}
+        {% endfor %}
+      </div>
+
+      <div class="tabbed-media__panels">
+        {% for block in section.blocks %}
+          {% render 'tabbed-media-image-panel',
+            block: block,
+            section_id: section.id,
+            index: forloop.index0,
+            fallback_label: block.settings.label
+          %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="tabbed-media__empty-state">
+        Add tab blocks in the theme editor to show images here.
+      </div>
+    {% endif %}
+  </tabbed-media-component>
+</div>
+
+{% stylesheet %}
+  tabbed-media-component {
+    display: block;
+    width: 100%;
+  }
+
+  .tabbed-media-section {
+    background: #0b0660;
+  }
+
+  .tabbed-media-section__background {
+    background: #0b0660;
+  }
+
+  .tabbed-media {
+    display: grid;
+    gap: var(--tabbed-media-content-gap);
+    max-width: 1232px;
+    margin: 0 auto;
+  }
+
+  .tabbed-media__header {
+    display: grid;
+    gap: 18px;
+    max-width: 1060px;
+  }
+
+  .tabbed-media__eyebrow {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+
+  .tabbed-media__heading {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(2.5rem, 4.8vw, 4.125rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    max-width: 860px;
+  }
+
+  .tabbed-media__text {
+    max-width: 900px;
+    color: rgb(255 255 255 / 0.92);
+    font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+    line-height: 1.45;
+  }
+
+  .tabbed-media__text > *:first-child {
+    margin-top: 0;
+  }
+
+  .tabbed-media__text > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .tabbed-media__tablist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tabbed-media-tabs-gap);
+    align-items: center;
+  }
+
+  .tabbed-media__tab {
+    appearance: none;
+    border: 1px solid transparent;
+    background: #4a4788;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    min-height: 62px;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+
+  .tabbed-media__tab:hover {
+    background: #58549a;
+  }
+
+  .tabbed-media__tab[aria-selected='true'] {
+    background: #fff;
+    color: #1f37ff;
+    border-color: #fff;
+  }
+
+  .tabbed-media__tab:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  .tabbed-media__panels {
+    position: relative;
+  }
+
+  .tabbed-media__panel {
+    width: 100%;
+    display: grid;
+    gap: 28px;
+  }
+
+  .tabbed-media__panel[hidden] {
+    display: none;
+  }
+
+  .tabbed-media__panel-text {
+    max-width: 900px;
+    color: rgb(255 255 255 / 0.92);
+    font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+    line-height: 1.45;
+  }
+
+  .tabbed-media__panel-text > *:first-child {
+    margin-top: 0;
+  }
+
+  .tabbed-media__panel-text > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .tabbed-media__image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--tabbed-media-radius);
+    aspect-ratio: var(--tabbed-media-image-ratio-mobile);
+    background: #120f63;
+  }
+
+  .tabbed-media__image,
+  .tabbed-media__image-placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .tabbed-media__image {
+    object-fit: cover;
+  }
+
+  .tabbed-media__image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    opacity: 0.7;
+  }
+
+  .tabbed-media__hotspots {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .tabbed-media__hotspot-mock {
+    position: absolute;
+  }
+
+  .tabbed-media__hotspot-mock--left {
+    top: 47.5%;
+    left: 27%;
+  }
+
+  .tabbed-media__hotspot-mock--right {
+    top: 33.5%;
+    right: 27.5%;
+  }
+
+  .tabbed-media__hotspot-mock--active {
+    top: 67%;
+    left: 57%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tabbed-media__hotspot-circle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.92);
+    box-shadow: 0 16px 32px rgb(0 0 0 / 0.16);
+  }
+
+  .tabbed-media__hotspot-circle--active {
+    background: #1f37ff;
+  }
+
+  .tabbed-media__hotspot-plus {
+    position: relative;
+    width: 18px;
+    height: 18px;
+  }
+
+  .tabbed-media__hotspot-plus::before,
+  .tabbed-media__hotspot-plus::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    background: #1f37ff;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+  }
+
+  .tabbed-media__hotspot-plus::before {
+    width: 18px;
+    height: 3px;
+  }
+
+  .tabbed-media__hotspot-plus::after {
+    width: 3px;
+    height: 18px;
+  }
+
+  .tabbed-media__hotspot-circle--active .tabbed-media__hotspot-plus::before,
+  .tabbed-media__hotspot-circle--active .tabbed-media__hotspot-plus::after {
+    background: #fff;
+  }
+
+  .tabbed-media__hotspot-note {
+    max-width: 214px;
+    padding: 15px 18px;
+    border-radius: 14px;
+    background: #fff;
+    color: #17185f;
+    font-size: 1rem;
+    line-height: 1.45;
+    box-shadow: 0 16px 32px rgb(0 0 0 / 0.14);
+  }
+
+  .tabbed-media__tab-label {
+    white-space: nowrap;
+  }
+
+  .tabbed-media__empty-state {
+    padding: 32px;
+    border-radius: var(--tabbed-media-radius);
+    border: 1px dashed rgb(255 255 255 / 0.22);
+    color: rgb(255 255 255 / 0.72);
+  }
+
+  @media screen and (min-width: 750px) {
+    .tabbed-media__image-wrapper {
+      aspect-ratio: var(--tabbed-media-image-ratio-desktop);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .tabbed-media-section {
+      padding-inline: 16px;
+      padding-block: 56px;
+    }
+
+    .tabbed-media {
+      gap: 24px;
+    }
+
+    .tabbed-media__header {
+      gap: 14px;
+    }
+
+    .tabbed-media__heading {
+      font-size: 3rem;
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+    }
+
+    .tabbed-media__text {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .tabbed-media__panel {
+      gap: 20px;
+    }
+
+    .tabbed-media__panel-text {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .tabbed-media__tablist {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .tabbed-media__tablist::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tabbed-media__tab {
+      min-height: 52px;
+      padding: 0.875rem 1.125rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      flex: 0 0 auto;
+    }
+
+    .tabbed-media__hotspot-circle {
+      width: 42px;
+      height: 42px;
+    }
+
+    .tabbed-media__hotspot-mock--left {
+      top: 34%;
+      left: 20%;
+    }
+
+    .tabbed-media__hotspot-mock--right {
+      top: 21%;
+      right: 25%;
+    }
+
+    .tabbed-media__hotspot-mock--active {
+      top: 58%;
+      left: 48%;
+      right: 14px;
+      gap: 0;
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .tabbed-media__hotspot-note {
+      margin-top: 10px;
+      max-width: 210px;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tabbed media",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Section label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Tabbed media section"
+    },
+    {
+      "type": "text",
+      "id": "tabs_aria_label",
+      "label": "Tabs accessibility label",
+      "default": "Tabbed media navigation"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page"
+        },
+        {
+          "value": "full-width",
+          "label": "Full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "text",
+      "id": "image_aspect_ratio_desktop",
+      "label": "Desktop image aspect ratio",
+      "default": "16 / 9"
+    },
+    {
+      "type": "text",
+      "id": "image_aspect_ratio_mobile",
+      "label": "Mobile image aspect ratio",
+      "default": "4 / 5"
+    },
+    {
+      "type": "range",
+      "id": "tabs_gap",
+      "label": "Gap between tabs",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Section gap",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tab label",
+          "default": "Tab label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Text",
+          "default": "<p>Add the tab description shown above the image.</p>"
+        },
+        {
+          "type": "textarea",
+          "id": "annotation_text",
+          "label": "Annotation text",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabbed media",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": {
+            "label": "Tab one"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "label": "Tab two"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "label": "Tab three"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

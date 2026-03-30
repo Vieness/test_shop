@@ -1,0 +1,66 @@
+{%- doc -%}
+  Renders an image panel for the tabbed media section.
+
+  @param {object} block - The section block
+  @param {string} section_id - The parent section id
+  @param {number} index - Zero-based block index
+  @param {string} fallback_label - Label to show when image is missing
+{%- enddoc -%}
+
+<div
+  class="tabbed-media__panel"
+  role="tabpanel"
+  ref="panels[]"
+  id="TabbedMediaPanel-{{ section_id }}-{{ block.id }}"
+  aria-labelledby="TabbedMediaTab-{{ section_id }}-{{ block.id }}"
+  aria-hidden="{% if index == 0 %}false{% else %}true{% endif %}"
+  {% unless index == 0 %}
+    hidden
+  {% endunless %}
+>
+  {% if block.settings.description != blank %}
+    <div class="tabbed-media__panel-text rte">
+      {{ block.settings.description }}
+    </div>
+  {% endif %}
+
+  <div class="tabbed-media__image-wrapper">
+    {% if block.settings.image != blank %}
+      {% render 'image',
+        image: block.settings.image,
+        class: 'tabbed-media__image',
+        style: 'width: 100%; height: 100%; object-fit: cover;'
+      %}
+    {% else %}
+      <div class="tabbed-media__image-placeholder">
+        {{ fallback_label | escape }}
+      </div>
+    {% endif %}
+
+    {% comment %}
+      TODO: render future hotspot snippet instances here using coordinate-based positioning.
+    {% endcomment %}
+    <div class="tabbed-media__hotspots" data-hotspots-root aria-hidden="true">
+      <div class="tabbed-media__hotspot-mock tabbed-media__hotspot-mock--left">
+        <span class="tabbed-media__hotspot-circle">
+          <span class="tabbed-media__hotspot-plus"></span>
+        </span>
+      </div>
+
+      <div class="tabbed-media__hotspot-mock tabbed-media__hotspot-mock--right">
+        <span class="tabbed-media__hotspot-circle">
+          <span class="tabbed-media__hotspot-plus"></span>
+        </span>
+      </div>
+
+      <div class="tabbed-media__hotspot-mock tabbed-media__hotspot-mock--active">
+        <span class="tabbed-media__hotspot-circle tabbed-media__hotspot-circle--active">
+          <span class="tabbed-media__hotspot-plus"></span>
+        </span>
+        <div class="tabbed-media__hotspot-note">
+          {{ block.settings.annotation_text | escape }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
