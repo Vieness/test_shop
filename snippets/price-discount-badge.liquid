@@ -1,0 +1,17 @@
+{%- liquid
+  assign current_price = price
+  assign original_price = compare_at_price
+  assign show_discount_badge = false
+
+  if original_price > current_price and original_price > 0
+    assign discount_amount = original_price | minus: current_price
+    assign discount_percent = discount_amount | times: 100.0 | divided_by: original_price | round
+    assign show_discount_badge = true
+  endif
+-%}
+
+{% if show_discount_badge %}
+  <span class="price-discount-badge">
+    -{{ discount_percent }}%
+  </span>
+{% endif %}

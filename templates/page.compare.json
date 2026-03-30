@@ -1,0 +1,37 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */{
+  "sections": {
+    "main": {
+      "type": "main-product-comparison",
+      "settings": {
+        "eyebrow": "Compare products",
+        "heading": "Product comparison",
+        "description": "Compare up to four products from one comparison group. Product cards and specifications are rendered from browser storage, while all field values come from Shopify admin.",
+        "count_label": "Products selected",
+        "catalog_label": "Continue shopping",
+        "clear_button_label": "Clear comparison",
+        "remove_button_label": "Remove product",
+        "empty_heading": "No products selected yet",
+        "empty_text": "Add products from any product page using the comparison button, then return here to see the table.",
+        "empty_button_label": "Go to catalog",
+        "empty_slot_label": "Select one more product",
+        "empty_value_label": "—",
+        "footer_text": "Use the same feature keys for all products in one comparison group so rows stay aligned.",
+        "footer_link_label": "Back to catalog",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

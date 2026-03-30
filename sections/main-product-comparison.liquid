@@ -1,0 +1,229 @@
+{{ 'product-comparison.css' | asset_url | stylesheet_tag }}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div class="section page-width-content color-{{ section.settings.color_scheme }}">
+  <product-comparison-page
+    class="product-comparison spacing-style"
+    data-count-label="{{ section.settings.count_label | escape }}"
+    data-empty-slot-label="{{ section.settings.empty_slot_label | escape }}"
+    data-empty-value-label="{{ section.settings.empty_value_label | escape }}"
+    data-compare-page-url="{{ request.path }}"
+    style="{% render 'spacing-style', settings: section.settings %}"
+  >
+    <header class="product-comparison__header">
+      <div class="product-comparison__header-copy">
+        {% if section.settings.eyebrow != blank %}
+          <p class="product-comparison__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        <h1 class="product-comparison__title">{{ section.settings.heading }}</h1>
+        {% if section.settings.description != blank %}
+          <p class="product-comparison__description">{{ section.settings.description }}</p>
+        {% endif %}
+        <p
+          class="product-comparison__count"
+          ref="count"
+        ></p>
+      </div>
+
+      <div class="product-comparison__actions">
+        {% if section.settings.catalog_url != blank %}
+          <a
+            href="{{ section.settings.catalog_url }}"
+            class="button button-secondary"
+          >
+            {{- section.settings.catalog_label -}}
+          </a>
+        {% endif %}
+        <button
+          type="button"
+          class="button"
+          ref="clearButton"
+        >
+          {{- section.settings.clear_button_label -}}
+        </button>
+      </div>
+    </header>
+
+    <div class="product-comparison__body">
+      <div
+        class="product-comparison__empty"
+        ref="emptyState"
+      >
+        <h2 class="product-comparison__empty-title">{{ section.settings.empty_heading }}</h2>
+        <p class="product-comparison__empty-text">{{ section.settings.empty_text }}</p>
+        {% if section.settings.catalog_url != blank %}
+          <a
+            href="{{ section.settings.catalog_url }}"
+            class="button"
+          >
+            {{- section.settings.empty_button_label -}}
+          </a>
+        {% endif %}
+      </div>
+
+      <div
+        class="product-comparison__content"
+        ref="content"
+        hidden
+      >
+        <div class="product-comparison__scroller">
+          <div class="product-comparison__matrix">
+            <div
+              class="product-comparison__cards-grid"
+              ref="cards"
+            ></div>
+            <div
+              class="product-comparison__group"
+              ref="groups"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if section.settings.footer_text != blank or section.settings.catalog_url != blank %}
+      <footer class="product-comparison__footer">
+        <p class="product-comparison__footer-text">{{ section.settings.footer_text }}</p>
+        {% if section.settings.catalog_url != blank %}
+          <a
+            href="{{ section.settings.catalog_url }}"
+            class="link"
+          >
+            {{- section.settings.footer_link_label -}}
+          </a>
+        {% endif %}
+      </footer>
+    {% endif %}
+
+    {% render 'compare-product-card', section: section %}
+    {% render 'compare-spec-row' %}
+  </product-comparison-page>
+</div>
+
+{% schema %}
+{
+  "name": "Product comparison",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Compare products"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product comparison"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Compare up to four products from one comparison group. Product cards and specifications are rendered from data saved from the product page."
+    },
+    {
+      "type": "text",
+      "id": "count_label",
+      "label": "Count label",
+      "default": "Products selected"
+    },
+    {
+      "type": "url",
+      "id": "catalog_url",
+      "label": "Catalog link"
+    },
+    {
+      "type": "text",
+      "id": "catalog_label",
+      "label": "Catalog button label",
+      "default": "Continue shopping"
+    },
+    {
+      "type": "text",
+      "id": "clear_button_label",
+      "label": "Clear button label",
+      "default": "Clear comparison"
+    },
+    {
+      "type": "text",
+      "id": "remove_button_label",
+      "label": "Remove product label",
+      "default": "Remove product"
+    },
+    {
+      "type": "text",
+      "id": "empty_heading",
+      "label": "Empty state heading",
+      "default": "No products selected yet"
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Empty state text",
+      "default": "Open a product page and add items to comparison. Data is stored in the browser, so the table fills instantly."
+    },
+    {
+      "type": "text",
+      "id": "empty_button_label",
+      "label": "Empty state button label",
+      "default": "Go to catalog"
+    },
+    {
+      "type": "text",
+      "id": "empty_slot_label",
+      "label": "Empty slot label",
+      "default": "Select one more product"
+    },
+    {
+      "type": "text",
+      "id": "empty_value_label",
+      "label": "Empty value label",
+      "default": "—"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_text",
+      "label": "Footer text",
+      "default": "Keep the same feature keys on all comparable products so rows line up correctly in the table."
+    },
+    {
+      "type": "text",
+      "id": "footer_link_label",
+      "label": "Footer link label",
+      "default": "Back to catalog"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    }
+  ]
+}
+{% endschema %}

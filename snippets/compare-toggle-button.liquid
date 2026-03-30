@@ -1,0 +1,175 @@
+{{ 'product-comparison.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign compare_group_key = product.category.full_name | default: product.category.name | handleize
+  assign compare_group_label = product.category.full_name | default: product.category.name
+
+  if compare_group_key == blank
+    assign compare_group_key = product.type | handleize
+  endif
+
+  if compare_group_label == blank
+    assign compare_group_label = product.type | default: product.vendor | default: 'Default comparison group'
+  endif
+
+  assign selected_variant = product.selected_or_first_available_variant
+  assign compare_page_url = block.settings.compare_page_url
+
+  if block.settings.compare_page != blank
+    assign compare_page_url = block.settings.compare_page.url
+  endif
+
+  if compare_page_url == blank
+    assign compare_page_url = '/pages/compare'
+  endif
+
+  assign compare_image = selected_variant.featured_image | default: product.featured_image
+  assign compare_description = product.description | strip_html | strip_newlines | truncatewords: 28
+%}
+
+<product-compare-toggle
+  class="product-compare-toggle"
+  data-product-id="{{ product.id }}"
+  data-compare-page-url="{{ compare_page_url }}"
+  data-add-label="{{ block.settings.compare_add_label | escape }}"
+  data-remove-label="{{ block.settings.compare_added_label | escape }}"
+  data-count-label="{{ block.settings.compare_count_label | escape }}"
+  data-view-label="{{ block.settings.compare_view_label | escape }}"
+  data-limit-message="{{ block.settings.compare_limit_message | escape }}"
+  data-group-message="{{ block.settings.compare_group_message | escape }}"
+>
+  <button
+    type="button"
+    class="button button-secondary product-compare-toggle__button"
+    ref="toggleButton"
+    aria-pressed="false"
+  >
+    <span class="svg-wrapper">
+      {{- 'icon-compare.svg' | inline_asset_content -}}
+    </span>
+    <span data-compare-label>{{ block.settings.compare_add_label }}</span>
+  </button>
+
+  <div class="product-compare-toggle__meta">
+    <span
+      class="product-compare-toggle__count"
+      ref="count"
+    ></span>
+    <a
+      href="{{ compare_page_url }}"
+      class="link"
+      data-compare-link
+    >
+      {{- block.settings.compare_view_label -}}
+    </a>
+  </div>
+
+  <p
+    class="product-compare-toggle__message"
+    ref="message"
+    aria-live="polite"
+  ></p>
+
+  <script type="application/json" data-compare-product-json>
+    {
+      "productId": {{ product.id | json }},
+      "handle": {{ product.handle | json }},
+      "title": {{ product.title | json }},
+      "url": {{ product.url | json }},
+      "description": {{ compare_description | json }},
+      "compareGroup": {
+        "key": {{ compare_group_key | json }},
+        "label": {{ compare_group_label | json }}
+      },
+      "moneyFormat": {{ shop.money_format | json }},
+      "currencyCode": {{ cart.currency.iso_code | default: shop.currency | json }},
+      "variant": {
+        "id": {{ selected_variant.id | json }},
+        "price": {{ selected_variant.price | default: product.price | json }},
+        "compareAtPrice": {{ selected_variant.compare_at_price | json }},
+        "available": {{ selected_variant.available | json }},
+        "image": {{ compare_image | image_url: width: 720 | json }}
+      },
+      "specs": [
+        {% assign spec_delimiter = '' %}
+
+        {% if product.metafields.custom.brand.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "brand",
+            "label": "Бренд",
+            "value": {{ product.metafields.custom.brand.value | json }},
+            "groupKey": "primary",
+            "groupLabel": "Основні характеристики",
+            "sortOrder": 1
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.country_of_origin.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "country_of_origin",
+            "label": "Країна виробника",
+            "value": {{ product.metafields.custom.country_of_origin.value | json }},
+            "groupKey": "primary",
+            "groupLabel": "Основні характеристики",
+            "sortOrder": 2
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.release_year.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "release_year",
+            "label": "Рік випуску",
+            "value": {{ product.metafields.custom.release_year.value | json }},
+            "groupKey": "primary",
+            "groupLabel": "Основні характеристики",
+            "sortOrder": 3
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.color.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "color",
+            "label": "Колір",
+            "value": {{ product.metafields.custom.color.value | json }},
+            "groupKey": "secondary",
+            "groupLabel": "Додаткові характеристики",
+            "sortOrder": 10
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.has_print.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "has_print",
+            "label": "Наявність принту",
+            "value": {{ product.metafields.custom.has_print.value | json }},
+            "groupKey": "secondary",
+            "groupLabel": "Додаткові характеристики",
+            "sortOrder": 11
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.cut_color.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "cut_color",
+            "label": "Колір крою",
+            "value": {{ product.metafields.custom.cut_color.value | json }},
+            "groupKey": "secondary",
+            "groupLabel": "Додаткові характеристики",
+            "sortOrder": 12
+          }
+        {% endif %}
+      ]
+    }
+  </script>
+</product-compare-toggle>

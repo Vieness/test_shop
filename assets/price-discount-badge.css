@@ -1,0 +1,20 @@
+.price-with-discount {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.price-discount-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2em 0.55em;
+  border-radius: 999px;
+  background: rgb(var(--color-foreground-rgb) / 0.08);
+  color: var(--color-foreground);
+  font-size: 0.78em;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}

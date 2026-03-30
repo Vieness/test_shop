@@ -1,0 +1,50 @@
+<template data-compare-card-template>
+  <article class="product-comparison__card">
+    <div class="product-comparison__card-top">
+      <span class="product-comparison__eyebrow">Product</span>
+      <button
+        type="button"
+        class="product-comparison__remove"
+        aria-label="{{ section.settings.remove_button_label | escape }}"
+        title="{{ section.settings.remove_button_label | escape }}"
+        data-remove-product
+      >
+        {{- 'icon-close.svg' | inline_asset_content -}}
+      </button>
+    </div>
+    <a
+      class="product-comparison__card-link"
+      href="#"
+      data-product-link
+    >
+      <div class="product-comparison__card-image-wrapper">
+        <img
+          class="product-comparison__card-image"
+          src=""
+          alt=""
+          loading="lazy"
+          data-product-image
+        >
+      </div>
+      <h2
+        class="product-comparison__card-title"
+        data-product-title
+      ></h2>
+    </a>
+    <div class="product-comparison__card-prices">
+      <span
+        class="product-comparison__price"
+        data-product-price
+      ></span>
+      <span
+        class="product-comparison__compare-price"
+        data-product-compare-price
+        hidden
+      ></span>
+    </div>
+    <p
+      class="product-comparison__card-description"
+      data-product-description
+    ></p>
+  </article>
+</template>

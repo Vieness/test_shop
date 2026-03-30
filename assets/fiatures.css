@@ -1,0 +1,118 @@
+.cards-showcase {
+  display: grid;
+  width: 100%;
+  padding-inline: 24px;
+  background: #f6f5ff;
+  border-radius: 0;
+}
+
+.cards-showcase__container {
+  display: grid;
+  gap: 34px;
+  width: 100%;
+  max-width: 1330px;
+  margin: 0 auto;
+  justify-items: center;
+}
+
+.cards-showcase__intro {
+  display: grid;
+  gap: 20px;
+  justify-items: center;
+  max-width: 980px;
+  text-align: center;
+}
+
+.cards-showcase__heading {
+  margin: 0;
+  color: #12145f;
+}
+
+.cards-showcase__heading {
+  font-size: clamp(2rem, 3.6vw, 3.3rem);
+  line-height: 1.08;
+  font-weight: 700;
+}
+
+.cards-showcase__text {
+  max-width: 860px;
+  color: #12145f;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+}
+
+.cards-showcase__button {
+  width: fit-content;
+  text-decoration: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.cards-showcase__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 53px;
+  min-width: 204px;
+  padding: 0.9rem 1.6rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #101010;
+  background: #a6ff45;
+}
+
+.cards-showcase__grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.cards-showcase__button:hover {
+  opacity: 0.86;
+  transform: translateY(-1px);
+}
+
+.cards-showcase__grid--remainder-2 .cards-showcase__card:nth-last-child(2) {
+  grid-column: 2 / span 2;
+}
+
+.cards-showcase__grid--remainder-2 .cards-showcase__card:last-child {
+  grid-column: 4 / span 2;
+}
+
+.cards-showcase__grid--remainder-1 .cards-showcase__card:last-child {
+  grid-column: 3 / span 2;
+}
+
+@media screen and (max-width: 1199px) {
+  .cards-showcase__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 920px;
+  }
+
+  .cards-showcase__grid--remainder-2 .cards-showcase__card:nth-last-child(2),
+  .cards-showcase__grid--remainder-2 .cards-showcase__card:last-child,
+  .cards-showcase__grid--remainder-1 .cards-showcase__card:last-child {
+    grid-column: auto;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .cards-showcase__container {
+    gap: 28px;
+  }
+
+  .cards-showcase__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cards-showcase__heading {
+    font-size: clamp(1.8rem, 8vw, 2.35rem);
+  }
+
+  .cards-showcase__text {
+    font-size: 1rem;
+  }
+
+}

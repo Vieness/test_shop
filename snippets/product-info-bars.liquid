@@ -1,0 +1,63 @@
+{% liquid
+  assign seller_info = product.metafields.custom.seller_info.value
+  assign shipping_info = product.metafields.custom.shipping_info.value
+  assign support_info = product.metafields.custom.support_info.value
+  assign returns_info = product.metafields.custom.returns_info.value
+  assign has_info_bars = false
+
+  if seller_info != blank or shipping_info != blank or support_info != blank or returns_info != blank
+    assign has_info_bars = true
+  endif
+%}
+
+{% if has_info_bars %}
+  <div class="product-info-bars" data-testid="product-info-bars">
+    {% if seller_info != blank %}
+      <details class="product-info-bars__item">
+        <summary class="product-info-bars__summary">
+          <span>Seller information</span>
+          <span class="product-info-bars__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="product-info-bars__content rte">
+          {{ seller_info | escape | newline_to_br }}
+        </div>
+      </details>
+    {% endif %}
+
+    {% if shipping_info != blank %}
+      <details class="product-info-bars__item">
+        <summary class="product-info-bars__summary">
+          <span>Shipping</span>
+          <span class="product-info-bars__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="product-info-bars__content rte">
+          {{ shipping_info | escape | newline_to_br }}
+        </div>
+      </details>
+    {% endif %}
+
+    {% if support_info != blank %}
+      <details class="product-info-bars__item">
+        <summary class="product-info-bars__summary">
+          <span>Support</span>
+          <span class="product-info-bars__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="product-info-bars__content rte">
+          {{ support_info | escape | newline_to_br }}
+        </div>
+      </details>
+    {% endif %}
+
+    {% if returns_info != blank %}
+      <details class="product-info-bars__item">
+        <summary class="product-info-bars__summary">
+          <span>Returns</span>
+          <span class="product-info-bars__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="product-info-bars__content rte">
+          {{ returns_info | escape | newline_to_br }}
+        </div>
+      </details>
+    {% endif %}
+  </div>
+{% endif %}

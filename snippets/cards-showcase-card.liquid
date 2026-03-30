@@ -1,0 +1,51 @@
+{%- liquid
+  assign card_link = block.settings.link
+  assign card_label = block.settings.link_label
+-%}
+
+<article
+  class="cards-showcase__card"
+  {{ block.shopify_attributes }}
+>
+  <div class="cards-showcase__card-content">
+    {% if block.settings.icon_image != blank %}
+      <div class="cards-showcase__card-icon">
+        {{
+          block.settings.icon_image
+          | image_url: width: 96
+          | image_tag:
+            widths: '48, 72, 96',
+            sizes: '48px',
+            alt: block.settings.icon_image.alt,
+            loading: 'lazy',
+            class: 'cards-showcase__card-icon-image'
+        }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.title != blank %}
+      <h3 class="cards-showcase__card-title">{{ block.settings.title }}</h3>
+    {% endif %}
+
+    {% if block.settings.text != blank %}
+      <div class="cards-showcase__card-text rte">
+        {{ block.settings.text }}
+      </div>
+    {% endif %}
+
+    {% if card_label != blank %}
+      <a
+        class="cards-showcase__card-link"
+        {% if card_link == blank %}
+          role="link"
+          aria-disabled="true"
+        {% else %}
+          href="{{ card_link }}"
+        {% endif %}
+      >
+        <span>{{ card_label }}</span>
+        <span class="cards-showcase__card-link-icon" aria-hidden="true">&rarr;</span>
+      </a>
+    {% endif %}
+  </div>
+</article>

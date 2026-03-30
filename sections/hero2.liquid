@@ -1,0 +1,32 @@
+{{ "hero2.css" | asset_url | stylesheet_tag }}
+<p>{{ section.settings.section_s_name }}</p>
+<img src="{{ section.settings.image | img_url:"master"}}" alt="{{ section.settings.image_alt }}" loading="lazy" height="{{ section.settings.image.width }}" width="{{ section.settings.image.width }} ">
+<div>
+    {{ section.settings.richerd }}
+</div>
+{% schema %}
+{
+  "name": "hero_section",
+  "tag": "section",
+  "class": "section hero-section section--hero-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_s_name",
+      "label": "Text Label",
+      "default": "text example"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "richerd",
+      "label": "Image"
+    }
+  ]
+}
+
+{% endschema %}

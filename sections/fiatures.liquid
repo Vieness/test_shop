@@ -1,0 +1,187 @@
+{{ 'fiatures.css' | asset_url | stylesheet_tag }}
+{{ 'fiatures-card.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign cards_count = section.blocks.size
+  assign cards_remainder = cards_count | modulo: 3
+%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<section
+  class="section section--full-width color-{{ section.settings.color_scheme }}"
+  data-testid="cards-showcase-{{ section.id }}"
+>
+  <div
+    class="cards-showcase spacing-style"
+    style="
+      {% render 'spacing-style', settings: section.settings %}
+    "
+  >
+    <div class="cards-showcase__container">
+      <div class="cards-showcase__intro">
+        {% if section.settings.heading != blank %}
+          <h2 class="cards-showcase__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+          <div class="cards-showcase__text rte">
+            {{ section.settings.text }}
+          </div>
+        {% endif %}
+
+      </div>
+
+      <div class="cards-showcase__grid cards-showcase__grid--remainder-{{ cards_remainder }}{% if cards_count == 2 %} cards-showcase__grid--two-cards{% endif %}">
+        {% for block in section.blocks %}
+          {% render 'cards-showcase-card', block: block %}
+        {% endfor %}
+      </div>
+
+      {% if section.settings.button_label != blank %}
+        <a
+          class="cards-showcase__button"
+          {% if section.settings.button_link == blank %}
+            role="link"
+            aria-disabled="true"
+          {% else %}
+            href="{{ section.settings.button_link }}"
+          {% endif %}
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Features cards",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ready to start your custom solar design?"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>To create your optimal solar design, Taylor will need to collect the following key information</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Get Solar Design"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page"
+        },
+        {
+          "value": "full-width",
+          "label": "Full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Card title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Add supporting copy for this card.</p>"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Learn more"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features cards",
+      "blocks": [
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
