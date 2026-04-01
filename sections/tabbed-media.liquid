@@ -4,9 +4,14 @@
   fetchpriority="low"
 ></script>
 
+{% liquid
+  assign tab_blocks = section.blocks | where: 'type', 'tab'
+%}
+
 <div class="section-background tabbed-media-section__background"></div>
 <div
   class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} spacing-style tabbed-media-section"
+  data-design-mode="{% if request.design_mode %}true{% else %}false{% endif %}"
   style="
     {% render 'spacing-style', settings: section.settings %}
     --tabbed-media-radius: {{ section.settings.corner_radius }}px;
@@ -16,7 +21,10 @@
     --tabbed-media-content-gap: {{ section.settings.content_gap }}px;
   "
 >
-  <tabbed-media-component class="tabbed-media">
+  <tabbed-media-component
+    class="tabbed-media"
+    data-section-id="{{ section.id }}"
+  >
     <div class="tabbed-media__header">
       {% if section.settings.eyebrow != blank %}
         <p class="tabbed-media__eyebrow">{{ section.settings.eyebrow }}</p>
@@ -27,19 +35,19 @@
       {% endif %}
     </div>
 
-    {% if section.blocks.size > 0 %}
+    {% if tab_blocks.size > 0 %}
       <div
         class="tabbed-media__tablist"
         role="tablist"
         aria-label="{{ section.settings.tabs_aria_label | escape }}"
       >
-        {% for block in section.blocks %}
+        {% for block in tab_blocks %}
           {% render 'tabbed-media-tab-button', block: block, section_id: section.id, index: forloop.index0 %}
         {% endfor %}
       </div>
 
       <div class="tabbed-media__panels">
-        {% for block in section.blocks %}
+        {% for block in tab_blocks %}
           {% render 'tabbed-media-image-panel',
             block: block,
             section_id: section.id,
@@ -218,26 +226,35 @@
     pointer-events: none;
   }
 
-  .tabbed-media__hotspot-mock {
+  .tabbed-media__hotspot {
     position: absolute;
+    inset: auto auto auto auto;
+    top: var(--hotspot-y);
+    left: var(--hotspot-x);
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
   }
 
-  .tabbed-media__hotspot-mock--left {
-    top: 47.5%;
-    left: 27%;
+  .tabbed-media__hotspot > summary {
+    list-style: none;
   }
 
-  .tabbed-media__hotspot-mock--right {
-    top: 33.5%;
-    right: 27.5%;
+  .tabbed-media__hotspot > summary::-webkit-details-marker {
+    display: none;
   }
 
-  .tabbed-media__hotspot-mock--active {
-    top: 67%;
-    left: 57%;
-    display: flex;
+  .tabbed-media__hotspot-trigger {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .tabbed-media__hotspot[data-dragging] .tabbed-media__hotspot-trigger {
+    cursor: grabbing;
   }
 
   .tabbed-media__hotspot-circle {
@@ -252,50 +269,86 @@
     box-shadow: 0 16px 32px rgb(0 0 0 / 0.16);
   }
 
-  .tabbed-media__hotspot-circle--active {
+  .tabbed-media__hotspot[open] .tabbed-media__hotspot-circle {
     background: #1f37ff;
   }
 
   .tabbed-media__hotspot-plus {
-    position: relative;
     width: 18px;
     height: 18px;
   }
 
-  .tabbed-media__hotspot-plus::before,
-  .tabbed-media__hotspot-plus::after {
-    content: '';
-    position: absolute;
-    inset: 50% auto auto 50%;
-    background: #1f37ff;
-    transform: translate(-50%, -50%);
-    border-radius: 999px;
+  .tabbed-media__hotspot-plus line {
+    stroke: #1f37ff;
+    stroke-width: 3;
+    stroke-linecap: round;
   }
 
-  .tabbed-media__hotspot-plus::before {
-    width: 18px;
-    height: 3px;
-  }
-
-  .tabbed-media__hotspot-plus::after {
-    width: 3px;
-    height: 18px;
-  }
-
-  .tabbed-media__hotspot-circle--active .tabbed-media__hotspot-plus::before,
-  .tabbed-media__hotspot-circle--active .tabbed-media__hotspot-plus::after {
-    background: #fff;
+  .tabbed-media__hotspot[open] .tabbed-media__hotspot-plus line {
+    stroke: #fff;
   }
 
   .tabbed-media__hotspot-note {
+    position: absolute;
     max-width: 214px;
     padding: 15px 18px;
     border-radius: 14px;
     background: #fff;
     color: #17185f;
-    font-size: 1rem;
-    line-height: 1.45;
+    font-size: 0.875rem;
+    line-height: 1.35;
     box-shadow: 0 16px 32px rgb(0 0 0 / 0.14);
+    white-space: normal;
+  }
+
+  .tabbed-media__hotspot-helper {
+    display: none;
+  }
+
+  .tabbed-media-section[data-design-mode='true'] .tabbed-media__hotspot-helper {
+    display: block;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: max-content;
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: rgb(11 6 96 / 0.92);
+    color: #fff;
+    font-size: 0.6875rem;
+    line-height: 1.25;
+    white-space: nowrap;
+    box-shadow: 0 8px 18px rgb(0 0 0 / 0.18);
+  }
+
+  .tabbed-media-section[data-design-mode='true'] .tabbed-media__hotspot-helper strong {
+    color: #8ea0ff;
+    font-weight: 700;
+  }
+
+  .tabbed-media__hotspot--right .tabbed-media__hotspot-note {
+    top: 50%;
+    left: calc(100% + 12px);
+    transform: translateY(-50%);
+  }
+
+  .tabbed-media__hotspot--left .tabbed-media__hotspot-note {
+    top: 50%;
+    right: calc(100% + 12px);
+    transform: translateY(-50%);
+  }
+
+  .tabbed-media__hotspot--top .tabbed-media__hotspot-note {
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .tabbed-media__hotspot--bottom .tabbed-media__hotspot-note {
+    top: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .tabbed-media__tab-label {
@@ -373,30 +426,21 @@
       height: 42px;
     }
 
-    .tabbed-media__hotspot-mock--left {
-      top: 34%;
-      left: 20%;
-    }
-
-    .tabbed-media__hotspot-mock--right {
-      top: 21%;
-      right: 25%;
-    }
-
-    .tabbed-media__hotspot-mock--active {
-      top: 58%;
-      left: 48%;
-      right: 14px;
-      gap: 0;
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
     .tabbed-media__hotspot-note {
-      margin-top: 10px;
-      max-width: 210px;
+      max-width: min(210px, calc(100vw - 48px));
       padding: 14px 16px;
-      font-size: 0.95rem;
+      font-size: 0.8125rem;
+    }
+
+    .tabbed-media__hotspot--left .tabbed-media__hotspot-note,
+    .tabbed-media__hotspot--right .tabbed-media__hotspot-note,
+    .tabbed-media__hotspot--top .tabbed-media__hotspot-note,
+    .tabbed-media__hotspot--bottom .tabbed-media__hotspot-note {
+      top: calc(100% + 10px);
+      right: auto;
+      bottom: auto;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 {% endstylesheet %}
@@ -538,10 +582,202 @@
           "default": "<p>Add the tab description shown above the image.</p>"
         },
         {
+          "type": "header",
+          "content": "Hotspot 1"
+        },
+        {
+          "type": "checkbox",
+          "id": "hotspot_1_enabled",
+          "label": "Enable hotspot 1",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "hotspot_1_x",
+          "label": "Hotspot 1 horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "hotspot_1_y",
+          "label": "Hotspot 1 vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "select",
+          "id": "hotspot_1_annotation_position",
+          "label": "Hotspot 1 annotation position",
+          "options": [
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "right"
+        },
+        {
           "type": "textarea",
-          "id": "annotation_text",
-          "label": "Annotation text",
-          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          "id": "hotspot_1_annotation_text",
+          "label": "Hotspot 1 annotation text",
+          "default": "Add hotspot annotation text."
+        },
+        {
+          "type": "text",
+          "id": "hotspot_1_accessibility_label",
+          "label": "Hotspot 1 accessibility label",
+          "default": "Open hotspot annotation"
+        },
+        {
+          "type": "header",
+          "content": "Hotspot 2"
+        },
+        {
+          "type": "checkbox",
+          "id": "hotspot_2_enabled",
+          "label": "Enable hotspot 2",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "hotspot_2_x",
+          "label": "Hotspot 2 horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "hotspot_2_y",
+          "label": "Hotspot 2 vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "select",
+          "id": "hotspot_2_annotation_position",
+          "label": "Hotspot 2 annotation position",
+          "options": [
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "textarea",
+          "id": "hotspot_2_annotation_text",
+          "label": "Hotspot 2 annotation text",
+          "default": "Add hotspot annotation text."
+        },
+        {
+          "type": "text",
+          "id": "hotspot_2_accessibility_label",
+          "label": "Hotspot 2 accessibility label",
+          "default": "Open hotspot annotation"
+        },
+        {
+          "type": "header",
+          "content": "Hotspot 3"
+        },
+        {
+          "type": "checkbox",
+          "id": "hotspot_3_enabled",
+          "label": "Enable hotspot 3",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "hotspot_3_x",
+          "label": "Hotspot 3 horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "hotspot_3_y",
+          "label": "Hotspot 3 vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "select",
+          "id": "hotspot_3_annotation_position",
+          "label": "Hotspot 3 annotation position",
+          "options": [
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "textarea",
+          "id": "hotspot_3_annotation_text",
+          "label": "Hotspot 3 annotation text",
+          "default": "Add hotspot annotation text."
+        },
+        {
+          "type": "text",
+          "id": "hotspot_3_accessibility_label",
+          "label": "Hotspot 3 accessibility label",
+          "default": "Open hotspot annotation"
         }
       ]
     }

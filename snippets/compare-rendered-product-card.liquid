@@ -1,0 +1,53 @@
+{% liquid
+  assign selected_variant = product.selected_or_first_available_variant
+  assign product_url = selected_variant.url | default: product.url
+  assign compare_image = selected_variant.featured_image | default: product.featured_image
+  assign compare_description = product.description | strip_html | strip_newlines | truncatewords: 28
+%}
+
+<article
+  class="product-comparison__card"
+  data-product-comparison-card
+  data-product-id="{{ product.id }}"
+>
+  <div class="product-comparison__card-top">
+    <span class="product-comparison__eyebrow">{{ product.category.name | default: product.type | escape }}</span>
+    <button
+      type="button"
+      class="product-comparison__remove"
+      data-remove-product
+    >
+      {{- 'icon-close.svg' | inline_asset_content -}}
+    </button>
+  </div>
+  <a
+    class="product-comparison__card-link"
+    href="{{ product_url }}"
+    data-product-link
+  >
+    <div class="product-comparison__card-image-wrapper">
+      {% if compare_image != blank %}
+        {{
+          compare_image
+          | image_url: width: 720
+          | image_tag:
+            class: 'product-comparison__card-image',
+            loading: 'lazy',
+            alt: product.title
+        }}
+      {% endif %}
+    </div>
+    <h2 class="product-comparison__card-title">{{ product.title }}</h2>
+  </a>
+  <div class="product-comparison__card-prices">
+    <span class="product-comparison__price">
+      {{ selected_variant.price | money }}
+    </span>
+    {% if selected_variant.compare_at_price > selected_variant.price %}
+      <span class="product-comparison__compare-price">
+        {{ selected_variant.compare_at_price | money }}
+      </span>
+    {% endif %}
+  </div>
+  <p class="product-comparison__card-description">{{ compare_description }}</p>
+</article>

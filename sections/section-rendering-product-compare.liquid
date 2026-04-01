@@ -1,0 +1,115 @@
+{% liquid
+  if product == blank
+    assign product = closest.product
+  endif
+
+  assign selected_variant = product.selected_or_first_available_variant
+  assign product_url = selected_variant.url | default: product.url
+  assign compare_group_key = product.category.full_name | default: product.category.name | handleize
+  assign compare_group_label = product.category.full_name | default: product.category.name
+
+  if compare_group_key == blank
+    assign compare_group_key = product.type | handleize
+  endif
+
+  if compare_group_label == blank
+    assign compare_group_label = product.type | default: product.vendor | default: 'Default comparison group'
+  endif
+%}
+
+<div
+  data-product-comparison-render
+  data-product-id="{{ product.id }}"
+>
+  {% render 'compare-rendered-product-card', product: product %}
+
+  <script type="application/json" data-product-comparison-specs>
+    {
+      "productId": {{ product.id | json }},
+      "handle": {{ product.handle | json }},
+      "path": {{ product_url | json }},
+      "compareGroup": {
+        "key": {{ compare_group_key | json }},
+        "label": {{ compare_group_label | json }}
+      },
+      "specs": [
+        {% assign spec_delimiter = '' %}
+
+        {% if product.metafields.custom.brand.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "brand",
+            "value": {{ product.metafields.custom.brand.value | json }},
+            "sortOrder": 1
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.country_of_origin.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "country_of_origin",
+            "value": {{ product.metafields.custom.country_of_origin.value | json }},
+            "sortOrder": 2
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.release_year.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "release_year",
+            "value": {{ product.metafields.custom.release_year.value | json }},
+            "sortOrder": 3
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.color.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "color",
+            "value": {{ product.metafields.custom.color.value | json }},
+            "sortOrder": 10
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.has_print.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "has_print",
+            "value": {{ product.metafields.custom.has_print.value | json }},
+            "sortOrder": 11
+          }
+          {% assign spec_delimiter = ',' %}
+        {% endif %}
+
+        {% if product.metafields.custom.cut_color.value != blank %}
+          {{- spec_delimiter -}}
+          {
+            "featureKey": "cut_color",
+            "value": {{ product.metafields.custom.cut_color.value | json }},
+            "sortOrder": 12
+          }
+        {% endif %}
+      ]
+    }
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "Product compare rendering",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    }
+  ]
+}
+{% endschema %}

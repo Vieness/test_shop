@@ -179,7 +179,12 @@
             "label": "Irradiance Map",
             "image": "shopify://shop_images/image-resources2.jpg",
             "description": "<p>Shows how much sunlight a location gets, vital for predicting solar energy production.</p>",
-            "annotation_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            "hotspot_1_enabled": true,
+            "hotspot_1_x": 33,
+            "hotspot_1_y": 55,
+            "hotspot_1_annotation_position": "right",
+            "hotspot_1_annotation_text": "This area receives strong sun exposure during most of the day.",
+            "hotspot_1_accessibility_label": "Open irradiance hotspot"
           }
         },
         "tab_second": {
@@ -188,7 +193,12 @@
             "label": "Shading Study",
             "image": "shopify://shop_images/image-resources2.jpg",
             "description": "<p>Highlights roof obstructions and shaded areas to estimate real panel performance.</p>",
-            "annotation_text": "Shaded zones and roof obstacles are highlighted in this report."
+            "hotspot_1_enabled": true,
+            "hotspot_1_x": 66,
+            "hotspot_1_y": 42,
+            "hotspot_1_annotation_position": "left",
+            "hotspot_1_annotation_text": "Roof obstructions and shade impact are identified here.",
+            "hotspot_1_accessibility_label": "Open shading hotspot"
           }
         },
         "tab_third": {
@@ -196,8 +206,7 @@
           "settings": {
             "label": "System Design",
             "image": "shopify://shop_images/image-resources2.jpg",
-            "description": "<p>Shows the proposed panel placement and equipment layout for the home.</p>",
-            "annotation_text": "Panel placement and system layout details appear here."
+            "description": "<p>Shows the proposed panel placement and equipment layout for the home.</p>"
           }
         },
         "tab_fourth": {
@@ -205,8 +214,7 @@
           "settings": {
             "label": "Energy Savings Summary",
             "image": "shopify://shop_images/image-resources2.jpg",
-            "description": "<p>Summarizes estimated production, offset, and projected long-term savings.</p>",
-            "annotation_text": "Projected savings and annual offset can be explained here."
+            "description": "<p>Summarizes estimated production, offset, and projected long-term savings.</p>"
           }
         },
         "tab_fifth": {
@@ -214,8 +222,7 @@
           "settings": {
             "label": "Materials List and Quote",
             "image": "shopify://shop_images/image-resources2.jpg",
-            "description": "<p>Lists the proposed equipment and pricing included in the PowerPlan package.</p>",
-            "annotation_text": "Equipment list and quote details can be shown in this callout."
+            "description": "<p>Lists the proposed equipment and pricing included in the PowerPlan package.</p>"
           }
         }
       },

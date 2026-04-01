@@ -15,7 +15,6 @@
   aria-controls="TabbedMediaPanel-{{ section_id }}-{{ block.id }}"
   aria-selected="{% if index == 0 %}true{% else %}false{% endif %}"
   tabindex="{% if index == 0 %}0{% else %}-1{% endif %}"
-  {{ block.shopify_attributes }}
 >
   <span class="tabbed-media__tab-label">{{ block.settings.label | escape }}</span>
 </button>
